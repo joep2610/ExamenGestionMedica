@@ -1,0 +1,23 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# .NET
+**/bin/
+**/obj/
+
+# Angular y Node
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+
+# Archivos temporales
+work/
+*.log
+*.tmp
+
+# Configuración local y secretos
+ExamenGestionMedica/appsettings.Development.json
+.env
+.env.*

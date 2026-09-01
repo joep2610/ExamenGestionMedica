@@ -1,0 +1,28 @@
+<section class="page-heading">
+  <div><p class="eyebrow">Resumen general</p><h1>Panel principal</h1><p>Una vista rápida de la actividad del centro médico.</p></div>
+  <span class="live-indicator"><i></i> Información actualizada</span>
+</section>
+@if (loading()) { <app-loading-state label="Preparando el resumen…" /> }
+@else if (error()) {
+  <div class="error-panel" role="alert"><strong>No pudimos cargar el panel principal</strong><p>{{ error() }}</p><button class="button button--secondary" type="button" (click)="load()">Reintentar</button></div>
+} @else {
+  <section class="metrics" aria-label="Indicadores principales">
+    <article class="metric metric--patients"><div><span>Pacientes registrados</span><strong>{{ patientCount() }}</strong><small>Expedientes disponibles</small></div><i aria-hidden="true">♙</i></article>
+    <article class="metric metric--appointments"><div><span>Total de citas</span><strong>{{ appointments().length }}</strong><small>Todos los estados</small></div><i aria-hidden="true">▣</i></article>
+    <article class="metric metric--scheduled"><div><span>Programadas</span><strong>{{ statusCounts().Scheduled }}</strong><small>Pendientes de atención</small></div><i aria-hidden="true">◷</i></article>
+    <article class="metric metric--confirmed"><div><span>Confirmadas</span><strong>{{ statusCounts().Confirmed }}</strong><small>Asistencia confirmada</small></div><i aria-hidden="true">✓</i></article>
+  </section>
+  <section class="dashboard-grid">
+    <article class="panel upcoming-panel">
+      <header><div><h2>Próximas citas</h2><p>Atenciones programadas más cercanas.</p></div><a href="/citas">Ver todas</a></header>
+      @if (upcoming().length === 0) { <app-empty-state icon="▣" title="No hay próximas citas" message="Las citas activas con fecha futura aparecerán aquí." /> }
+      @else { <div class="appointment-list">@for (appointment of upcoming(); track appointment.id) {
+        <div class="appointment-row"><div class="fecha-box"><strong>{{ formatDate(appointment.fechaHora).split(' ')[0] }}</strong><span>{{ formatDate(appointment.fechaHora).split(' ')[1] }}</span></div><div class="appointment-info"><strong>{{ appointment.nombreCompletoPaciente }}</strong><span>{{ appointment.medico }} · {{ appointment.motivo }}</span></div><time [attr.datetime]="appointment.fechaHora">{{ formatTime(appointment.fechaHora) }}</time><span [class]="'status status--' + appointment.estado.toLowerCase()">{{ labels[appointment.estado] }}</span></div>
+      }</div>}
+    </article>
+    <aside class="panel status-panel"><header><div><h2>Estado de citas</h2><p>Distribución actual</p></div></header><div class="status-summary">
+      <div><span><i class="dot scheduled"></i>Programadas</span><strong>{{ statusCounts().Scheduled }}</strong></div><div><span><i class="dot confirmed"></i>Confirmadas</span><strong>{{ statusCounts().Confirmed }}</strong></div><div><span><i class="dot completed"></i>Completadas</span><strong>{{ statusCounts().Completed }}</strong></div><div><span><i class="dot cancelled"></i>Canceladas</span><strong>{{ statusCounts().Cancelled }}</strong></div>
+    </div></aside>
+  </section>
+}
+

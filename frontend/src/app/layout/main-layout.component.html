@@ -1,0 +1,25 @@
+<div class="app-shell" [class.app-shell--menu-open]="menuOpen()">
+  <a class="skip-link" href="#main-content">Saltar al contenido</a>
+  <div class="mobile-backdrop" (click)="menuOpen.set(false)" aria-hidden="true"></div>
+  <aside id="main-sidebar" class="sidebar" aria-label="Navegación principal">
+    <div class="brand">
+      <span class="brand__mark" aria-hidden="true">✚</span>
+      <span><strong>Clínica Vital</strong><small>Gestión médica</small></span>
+    </div>
+    <nav>
+      <a routerLink="/panel" routerLinkActive="active"><span aria-hidden="true">⌂</span> Panel principal</a>
+      <a routerLink="/pacientes" routerLinkActive="active"><span aria-hidden="true">♙</span> Pacientes</a>
+      <a routerLink="/citas" routerLinkActive="active"><span aria-hidden="true">▣</span> Citas médicas</a>
+    </nav>
+    <div class="sidebar__support"><span aria-hidden="true">♡</span><div><strong>Atención segura</strong><small>Información clínica organizada</small></div></div>
+  </aside>
+  <div class="workspace">
+    <header class="topbar">
+      <button type="button" class="menu-button" (click)="menuOpen.update((value) => !value)" [attr.aria-expanded]="menuOpen()" aria-controls="main-sidebar" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+      <div><small>Panel administrativo</small><p>{{ currentDate }}</p></div>
+      <div class="user-chip" aria-label="Usuario actual"><span aria-hidden="true">AD</span><div><strong>Administrador</strong><small>Centro médico</small></div></div>
+    </header>
+    <main id="main-content" tabindex="-1"><router-outlet /></main>
+  </div>
+  <app-notification-center />
+</div>

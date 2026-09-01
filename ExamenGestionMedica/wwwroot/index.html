@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gestion Medica</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>Gestion Medica</h1>
+      <p>Pacientes y citas</p>
+    </div>
+    <nav class="tabs" aria-label="Modulos">
+      <button class="tab active" data-view="patients" type="button">Pacientes</button>
+      <button class="tab" data-view="appointments" type="button">Citas</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="patients-view" class="view active">
+      <div class="toolbar">
+        <label class="search">
+          <span>Buscar paciente</span>
+          <input id="patient-search" type="search" placeholder="Nombre, email o telefono">
+        </label>
+        <button id="refresh-patients" type="button">Actualizar</button>
+      </div>
+
+      <div class="workgrid">
+        <form id="patient-form" class="panel">
+          <input id="patient-id" type="hidden">
+          <h2 id="patient-form-title">Nuevo paciente</h2>
+          <div class="field-grid">
+            <label>Nombres<input id="patient-first-names" required></label>
+            <label>Apellidos<input id="patient-last-names" required></label>
+            <label>Fecha nacimiento<input id="patient-birth-date" type="date" required></label>
+            <label>Genero<input id="patient-gender" required></label>
+            <label>Direccion<input id="patient-address" required></label>
+            <label>Telefono<input id="patient-phone" required></label>
+            <label class="span-2">Email<input id="patient-email" type="email" required></label>
+          </div>
+          <div class="actions">
+            <button type="submit">Guardar</button>
+            <button id="clear-patient" class="secondary" type="button">Limpiar</button>
+          </div>
+        </form>
+
+        <section class="panel table-panel" aria-labelledby="patients-title">
+          <h2 id="patients-title">Pacientes registrados</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Paciente</th><th>Contacto</th><th>Nacimiento</th><th></th></tr></thead>
+              <tbody id="patients-table"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section id="appointments-view" class="view">
+      <div class="toolbar appointment-filters">
+        <label><span>Fecha</span><input id="filter-date" type="date"></label>
+        <label><span>Medico</span><input id="filter-doctor" placeholder="Dr. Lopez"></label>
+        <label><span>Estado</span><select id="filter-status"><option value="">Todos</option><option>Scheduled</option><option>Confirmed</option><option>Completed</option><option>Cancelled</option></select></label>
+        <button id="refresh-appointments" type="button">Filtrar</button>
+      </div>
+
+      <div class="workgrid">
+        <form id="appointment-form" class="panel">
+          <input id="appointment-id" type="hidden">
+          <h2 id="appointment-form-title">Nueva cita</h2>
+          <div class="field-grid">
+            <label class="span-2">Paciente<select id="appointment-patient" required></select></label>
+            <label>Medico<input id="appointment-doctor" required></label>
+            <label>Fecha y hora<input id="appointment-date-time" type="datetime-local" required></label>
+            <label>Estado<select id="appointment-status"><option>Scheduled</option><option>Confirmed</option><option>Completed</option><option>Cancelled</option></select></label>
+            <label>Motivo<input id="appointment-reason" required></label>
+            <label class="span-2">Diagnostico<textarea id="appointment-diagnosis" rows="3"></textarea></label>
+            <label class="span-2">Tratamiento<textarea id="appointment-treatment" rows="3"></textarea></label>
+          </div>
+          <div class="actions">
+            <button type="submit">Guardar</button>
+            <button id="clear-appointment" class="secondary" type="button">Limpiar</button>
+          </div>
+        </form>
+
+        <section class="panel table-panel" aria-labelledby="appointments-title">
+          <h2 id="appointments-title">Agenda medica</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Fecha</th><th>Paciente</th><th>Medico</th><th>Estado</th><th></th></tr></thead>
+              <tbody id="appointments-table"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="/app.js"></script>
+</body>
+</html>
