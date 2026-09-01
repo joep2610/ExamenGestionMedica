@@ -17,7 +17,27 @@ Aplicación para administrar pacientes y citas médicas. Incluye una API REST en
 
 ## Base de datos
 
-Configura `ConnectionStrings:DefaultConnection` en `ExamenGestionMedica/appsettings.json` para tu instancia de SQL Server. La API ejecuta `EnsureCreated()` al iniciar; alternativamente puedes ejecutar `database/schema.sql` desde SQL Server Management Studio o Azure Data Studio.
+Ejecuta `database/schema.sql` desde SQL Server Management Studio o Azure Data Studio. El script crea la base de datos `ExamenGestionMedicaDb`, las tablas, restricciones e índices. Los identificadores de pacientes y citas son columnas `INT IDENTITY(1,1)` autoincrementales.
+
+Para configurar la conexión local, crea el archivo `ExamenGestionMedica/appsettings.Development.json`. Este archivo está excluido de Git para evitar publicar credenciales. Ejemplo con autenticación de Windows:
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=TU_SERVIDOR;Database=ExamenGestionMedicaDb;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  }
+}
+```
+
+Si utilizas autenticación de SQL Server, reemplaza la cadena localmente con tu usuario y contraseña. No guardes credenciales reales en `appsettings.json` ni las publiques en Git.
+
+La API también ejecuta `EnsureCreated()` al iniciar cuando la base de datos aún no existe. Sin embargo, `EnsureCreated()` no modifica tablas existentes; ante cambios de estructura debes ejecutar el script actualizado sobre una base nueva o utilizar migraciones.
 
 ## Ejecución local
 
@@ -63,7 +83,7 @@ Pacientes:
 
 Citas médicas:
 
-- `GET /api/citas-medicas?date=AAAA-MM-DD&doctor=nombre&status=Scheduled`
+- `GET /api/citas-medicas?fecha=AAAA-MM-DD&medico=nombre&estado=Scheduled`
 - `GET /api/citas-medicas/{id}`
 - `POST /api/citas-medicas`
 - `PUT /api/citas-medicas/{id}`
@@ -73,4 +93,6 @@ Los estados enviados a la API son `Scheduled`, `Confirmed`, `Completed` y `Cance
 
 ## Errores y validaciones
 
-La API responde los errores de negocio como `application/problem+json`. El frontend interpreta los estados 400, 404, 409 y 500, presenta mensajes amigables y distingue específicamente los conflictos de horario médico. Los formularios replican los campos obligatorios y longitudes configuradas por el backend y la base de datos.
+La API utiliza FluentValidation para validar los DTOs de creación y actualización de pacientes y citas. Las reglas de negocio, como la existencia del paciente y los conflictos de horario médico, se validan en la capa de aplicación.
+
+Los errores se devuelven como `application/problem+json`. El frontend interpreta los estados 400, 404, 409 y 500, presenta mensajes amigables y distingue específicamente los conflictos de horario médico. Los formularios replican los campos obligatorios y longitudes configuradas por el backend y la base de datos.
